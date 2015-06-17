@@ -1,5 +1,10 @@
 <?php
 
+function bindValueIfExists($st, $q, $name, $value, $type = PDO::PARAM_STR) {
+	if (strpos($q, ":" . $name) !== FALSE)
+		$st->bindValue(":" . $name, $value, $type);
+}
+
 class ChangePasswordDBDriver implements \RainLoop\Providers\ChangePassword\ChangePasswordInterface
 {
 	/**
@@ -183,15 +188,10 @@ class ChangePasswordDBDriver implements \RainLoop\Providers\ChangePassword\Chang
 
 					$email = explode('@', $oAccount->Email());
 
-					$errmode = $oPdo->getAttribute(\PDO::ATTR_ERRMODE);
-					$oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
-
-						$oStmt->bindValue(':email', join('@', $email));
-						$oStmt->bindValue(':local', $email[0]);
-						$oStmt->bindValue(':domain', $email[1]);
-						$oStmt->bindValue(':password', $sEncodedPasswordHash);
-
-					$oPdo->setAttribute(\PDO::ATTR_ERRMODE, $errmode);
+					bindValueIfExists($oStmt, $this->sDBQuery, 'email', join('@', $email));
+					bindValueIfExists($oStmt, $this->sDBQuery, 'local', $email[0]);
+					bindValueIfExists($oStmt, $this->sDBQuery, 'domain', $email[1]);
+					bindValueIfExists($oStmt, $this->sDBQuery, 'password', $sEncodedPasswordHash);
 
 					$bResult = (bool) $oStmt->execute();
 				}
