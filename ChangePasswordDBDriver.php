@@ -174,13 +174,8 @@ class ChangePasswordDBDriver implements \RainLoop\Providers\ChangePassword\Chang
 				$oPdo = new \PDO($sDsn, $this->sDBUser, $this->sDBPassword);
 				$oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-				file_put_contents('/tmp/log.log', "FOO$sNewPassword\n", FILE_APPEND);
 				$sPasswordHash = $this->hashPassword($sNewPassword);
-				file_put_contents('/tmp/log.log', "FOO$sPasswordHash\n", FILE_APPEND);
 				$sEncodedPasswordHash = $this->encodePassword($sPasswordHash);
-				file_put_contents('/tmp/log.log', "FOO$sEncodedPasswordHash\n", FILE_APPEND);
-
-
 
 				if (0 < \strlen($sEncodedPasswordHash))
 				{
@@ -240,8 +235,6 @@ class ChangePasswordDBDriver implements \RainLoop\Providers\ChangePassword\Chang
 
 	private function hashPassword($sPassword)
 	{
-				file_put_contents('/tmp/log.log', "FOOCA{$this->sCryptAlgo}\n", FILE_APPEND);
-
 		switch ($this->sCryptAlgo)
 		{
 			case 'cleartext':
