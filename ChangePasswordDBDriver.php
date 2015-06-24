@@ -1,8 +1,7 @@
 <?php
 
-function bindValueIfExists($st, $q, $name, $value, $type = PDO::PARAM_STR) {
-	if (strpos($q, ":" . $name) !== FALSE)
-		$st->bindValue(":" . $name, $value, $type);
+if (!function_exists('bindValueIfExists')) {
+	require_once('bindValueIfExists.php');
 }
 
 class ChangePasswordDBDriver implements \RainLoop\Providers\ChangePassword\ChangePasswordInterface
